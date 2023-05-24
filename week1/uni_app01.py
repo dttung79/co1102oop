@@ -19,32 +19,38 @@ def print_user_details(names, user_ids, infos):
                 print(f"job title: {info}")
         print()
 
-def is_send(info, group):
-    send_message = False
-    if group == "all":
-        send_message = True
-    elif info is not None:
-        is_student = info.startswith("BSc ") or info.startswith("MSc ")
-        if group == "students" and is_student:
-            send_message = True
-        if group == "staff" and not is_student:
-            send_message = True
+# def is_send(info, group):
+#     send_message = False
+#     if group == "all":
+#         send_message = True
+#     elif info is not None:
+#         is_student = info.startswith("BSc ") or info.startswith("MSc ")
+#         if group == "students" and is_student:
+#             send_message = True
+#         if group == "staff" and not is_student:
+#             send_message = True
     
-    return send_message
-
+#     return send_message
+def is_send(name):
+    if name not in names:
+        print(f'{name} not found!')
+        return False
+    if user_ids[names.index(name)] is None:
+        print(f'{name} is guest! Message not sent')
+        return False
+    return True
 def send_messages(names, infos):
     while True:
-        group = input("Group (staff, students or all)? ")
-        if group == "":
-            break
-        message = input("Message? ")
-        if message == "":
-            break
-        for i in range(len(infos)):
-            info = infos[i]
-            if is_send(info, group):
-                name = names[i]
-                print(f" '{message}' sent to {name}")
+        name = input("Name? ")
+        if is_send(name):
+            message = input("Message? ")
+            if message == 'exit':
+                print('System exit')
+                break
+            elif message != "":
+                print(f"Message sent to {name}")
+            else:
+                print("Empty message not sent")
 
 ## MAIN PROGRAMS
 print_user_details(names, user_ids, infos)
