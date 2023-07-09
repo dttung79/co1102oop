@@ -87,4 +87,7 @@ for device in devices:
     else:
         device.set_widget(radio_setting)
 
+btn_exit = tk.Button(window, text="Exit", command=exit)
+btn_exit.grid(column=0, row=row + 1, sticky="W", padx=15, pady=10)
+
 window.mainloop()
