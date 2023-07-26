@@ -16,7 +16,7 @@ class Game:
         self.square_position = [self.width // 2, self.height // 2]
 
         # Define step size for square's movement
-        self.step_size = [10, 10]  # Adjust these values as needed
+        self.step_size = 10 # Adjust these values as needed
 
     def draw_square(self):
         pygame.draw.rect(self.window, self.WHITE, 
@@ -29,9 +29,13 @@ class Game:
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
-                    self.square_position[1] -= self.step_size[1]
+                    self.square_position[1] -= self.step_size
                 elif event.key == pygame.K_DOWN:
-                    self.square_position[1] += self.step_size[1]
+                    self.square_position[1] += self.step_size
+                elif event.key == pygame.K_LEFT:
+                    self.square_position[0] -= self.step_size
+                elif event.key == pygame.K_RIGHT:
+                    self.square_position[0] += self.step_size
 
     def run(self):
         while True:
