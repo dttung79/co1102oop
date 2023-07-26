@@ -38,6 +38,7 @@ class Game:
         self.BALL_SPEED = 0.5
         self.BASKET_SIZE = [100, 20]
         self.BASKET_MOVE_DISTANCE = 1
+        self.LEVEL_UP = 5
 
         # Initialize the basket
         self.basket = Basket([self.width // 2, self.height - 50], self.BASKET_SIZE, self.WHITE)
@@ -47,13 +48,18 @@ class Game:
 
         # Initialize the score
         self.score = 0
+        self.lives = 5
 
 
     def draw_objects(self):
         self.ball.draw(self.window)
         self.basket.draw(self.window)
+        
         text = self.font.render("Score: " + str(self.score), 1, self.WHITE)
         self.window.blit(text, (10, 10))
+
+        live_text = self.font.render("Lives: " + str(self.lives), 1, self.WHITE)
+        self.window.blit(live_text, (10, 50))
 
 
     def handle_events(self):
@@ -72,9 +78,20 @@ class Game:
         self.ball.move()
         if self.is_out_of_bounds():
             self.ball = Ball([random.randint(50, self.width-50), 0], self.BALL_RADIUS, self.WHITE, self.BALL_SPEED)
+            self.lives -= 1
+            if self.lives == 0:
+                text = self.font.render("Game Over", 1, self.WHITE)
+                self.window.blit(text, (self.width//2, self.height//2))
+                pygame.display.flip()
+                pygame.time.wait(3000)
+                pygame.quit()
+                sys.exit()
         elif self.is_collided(self.ball, self.basket):
             self.ball = Ball([random.randint(50, self.width-50), 0], self.BALL_RADIUS, self.WHITE, self.BALL_SPEED)
             self.score += 1
+
+            if self.score % self.LEVEL_UP == 0:
+                self.BALL_SPEED += 0.1
 
     def is_out_of_bounds(self):
         if self.ball.position[1] + self.ball.radius > self.height:
