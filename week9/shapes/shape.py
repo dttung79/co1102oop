@@ -1,4 +1,6 @@
-class Shape:
+from abc import ABC, abstractmethod
+# declare an abstract class Shape
+class Shape(ABC):
     def __init__(self, name):
         self.__check_name(name)
         self._name = name
@@ -16,8 +18,9 @@ class Shape:
         if value == '':
             raise ValueError('Name cannot be empty')
     
+    @abstractmethod
     def area(self):
-        return 0.0
+        pass
     
     def __str__(self):
         return f'Name: {self._name}, area: {self.area()}'
@@ -85,3 +88,70 @@ class Rectangle(Shape):
     def __str__(self):
         super_info = super().__str__()
         return f'{super_info}, width: {self._width}, height: {self._height}'
+    
+class Square(Rectangle):
+    def __init__(self, name, side):
+        super().__init__(name, side, side)
+
+    @property
+    def side(self):
+        return self.width
+    
+    @side.setter
+    def side(self, value):
+        self.width = value
+        self.height = value
+
+
+class Triange(Shape):
+    def __init__(self, name, a, b, c):
+        super().__init__(name)
+        self.__check_sides(a, b, c)
+        self._sidea = a
+        self._sideb = b
+        self._sidec = c
+    
+    def __check_sides(self, a, b, c):
+        if a <= 0 or b <= 0 or c <= 0:
+            raise ValueError('Side must be positive')
+        if a + b <= c or a + c <= b or b + c <= a:
+            raise ValueError('Invalid sides')
+    
+    @property
+    def sidea(self):
+        return self._sidea
+    
+    @sidea.setter
+    def sidea(self, value):
+        self.__check_sides(value, self._sideb, self._sidec)
+        self._sidea = value
+
+    @property
+    def sideb(self):
+        return self._sideb
+    
+    @sideb.setter
+    def sideb(self, value):
+        self.__check_sides(self._sidea, value, self._sidec)
+        self._sideb = value
+
+    @property
+    def sidec(self):
+        return self._sidec
+    
+    @sidec.setter
+    def sidec(self, value):
+        self.__check_sides(self._sidea, self._sideb, value)
+        self._sidec = value
+    
+    def area(self):
+        p = (self._sidea + self._sideb + self._sidec) / 2
+        return (p * (p - self._sidea) * (p - self._sideb) * (p - self._sidec)) ** 0.5
+    
+    def __str__(self):
+        super_info = super().__str__()
+        return f'{super_info}, sidea: {self._sidea}, sideb: {self._sideb}, sidec: {self._sidec}'
+    
+
+t = Triange('Triangle 1', 3, 4, 5)
+print(t)
