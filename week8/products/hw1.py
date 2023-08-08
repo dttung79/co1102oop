@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import messagebox
 from product import Product, Store
-from db import load_products
+from db import load_products, save_products
 #### CREATE WINDOW ####
 window = Tk()
 window.title("Week 7 HW 1")
@@ -89,6 +89,8 @@ def change_entry(txt, value):
     txt.insert(0, value)
 
 def update_form(curr_index):
+    if fpt_store.size() == 0:
+        return 
     # get product at curr_index
     p = fpt_store[curr_index]
     # update text of txt_name
@@ -112,6 +114,18 @@ def lst_products_clicked(event):
     # update form fields with product at index
     update_form(curr_index)
 
+def btn_load_clicked():
+    products = load_products()
+    for p in products:
+        fpt_store.add(p)
+        lst_products.insert(END, p.name)
+    messagebox.showinfo("Loaded", f"Loaded {len(products)} products.")
+
+def btn_save_clicked():
+    products = fpt_store.clone()
+    save_products(products)
+    messagebox.showinfo("Saved", f"Saved {len(products)} products.")
+
 #### CREATE WIDGETS ####
 # Create label with text 'Product Management', center aligned
 lbl_title = Label(window, text="Product Management", justify=CENTER)
@@ -122,13 +136,6 @@ lst_products = Listbox(window, height=5, width=30, justify=LEFT, selectmode=SING
 lst_products.grid(row=1, column=0, rowspan=4, columnspan=4, padx=5, pady=5)
 # Bind lst_products's <<ListboxSelect>> event to lst_products_clicked
 lst_products.bind("<<ListboxSelect>>", lst_products_clicked)
-
-for p in load_products():
-    fpt_store.add(p)
-    # add product to listbox
-    lst_products.insert(END, p.name)
-
-
 
 # Create button 'First', width 2, left aligned
 btn_first = Button(window, text="|<", width=2, command=btn_first_clicked)
@@ -170,6 +177,12 @@ btn_delete.grid(row=5, column=6)
 # Create button 'Edit'
 btn_edit = Button(window, text="Edit", command=btn_edit_clicked)
 btn_edit.grid(row=5, column=7)
+# Create button Load
+btn_load = Button(window, text="Load", command=btn_load_clicked)
+btn_load.grid(row=6, column=0)
+# Create button Save
+btn_save = Button(window, text="Save", command=btn_save_clicked)
+btn_save.grid(row=6, column=1)
 
 # Set listbox to select the first item
 update_form(0)

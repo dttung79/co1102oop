@@ -1,12 +1,23 @@
 from product import Product
+from tkinter import messagebox
 def load_products():
     products = []
-    products.append(Product('iPhone 12', 1000, 10))
-    products.append(Product('iPhone 12 Pro', 1200, 5))
-    products.append(Product('iPhone 12 Pro Max', 1400, 3))
-    products.append(Product('iPhone 12 Mini', 800, 10))
-    products.append(Product('iPhone 11', 700, 20))
-    products.append(Product('iPhone 11 Pro', 900, 30))
-    products.append(Product('iPhone 11 Pro Max', 1100, 30))
+    try:
+        f = open("products.csv", "r")
+        lines = f.readlines()
+
+        for line in lines:
+            name, price, stock = line.strip().split(",")
+            p = Product(name, float(price), int(stock))
+            products.append(p)
+        f.close()
+    except FileNotFoundError:
+        messagebox.showerror("Error", "File not found")
 
     return products
+
+def save_products(products):
+    f = open("products.csv", "w")
+    for p in products:
+        f.write(f"{p.name},{p.price},{p.stock}\n")
+    f.close()

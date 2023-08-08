@@ -59,6 +59,11 @@ class Store:
             raise IndexError('Index out of range.')
         
         return self.__products[index]    
+    def size(self):
+        return len(self.__products)
+    
+    def clone(self):
+        return self.__products[:]
     
     def find(self, name):
         found_products = []
