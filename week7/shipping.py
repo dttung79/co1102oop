@@ -1,31 +1,22 @@
 from tkinter import *
-
+from calculation import calculate_shipping_fee, shipping_methods
+from tkinter import messagebox
 # Dictionary containing the shipping methods and their corresponding costs
-shipping_methods = {
-    'Standard': 5.0,
-    'Express': 10.0,
-    'Priority': 15.0
-}
+
 
 def calculate_shipping():
     # Retrieve the selected shipping method and the values from the respective widgets
-    selected_method = var_shiping.get()
+    selected_method = var_shipping.get()
     weight = float(txt_weight.get())
     distance = float(txt_distance.get())
-    
-    # Adjust weight based on the selected unit
-    if var_weight_unit.get() == 'Pounds':
-        weight *= 0.45359237  # Convert pounds to kilograms
-    
-    # Adjust distance based on the selected unit
-    if var_distance_unit.get() == 'Miles':
-        distance *= 1.609344
-    
-    # Calculate the total shipping cost based on weight, distance, and the shipping method cost
-    total_cost = (weight * 0.1) + (distance * 0.05) + shipping_methods[selected_method]
-    
-    # Update the total cost label with the calculated value
-    lbl_total_cost.config(text=f"Total Shipping Cost: ${total_cost:.2f}")
+    weight_unit = var_weight_unit.get()
+    distance_unit = var_distance_unit.get()
+    try:
+        total_cost = calculate_shipping_fee(weight_unit, weight, distance_unit, distance, selected_method)
+        # Update the total cost label with the calculated value
+        lbl_total_cost.config(text=f"Total Shipping Cost: ${total_cost:.2f}")
+    except ValueError as e:
+        messagebox.showerror('Error', e)
 
 # Create the main window
 window = Tk()
